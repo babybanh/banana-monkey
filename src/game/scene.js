@@ -81,7 +81,7 @@ export class ReskinLabScene extends Phaser.Scene {
   }
 
   update(time, deltaMs) {
-    this.warmupComboPopups();
+    this.warmupEffectPopups();
 
     if (this.inputController.debugToggleRequested) {
       this.state.debugVisible = !this.state.debugVisible;
@@ -250,15 +250,42 @@ export class ReskinLabScene extends Phaser.Scene {
     }
     this.activeComboPopup = null;
     this.comboPopupTween = null;
-    this.comboWarmupFramesRemaining = 3;
+    this.hitPopups = new Map();
+    for (const damage of [1, 2]) {
+      this.hitPopups.set(damage, this.createHitPopup(damage));
+    }
+    this.activeHitPopup = null;
+    this.hitPopupTween = null;
+    this.effectWarmupFramesRemaining = 3;
   }
 
-  warmupComboPopups() {
-    if (!this.comboWarmupFramesRemaining) return;
-    this.comboWarmupFramesRemaining -= 1;
-    if (this.comboWarmupFramesRemaining > 0) return;
+  createHitPopup(damage) {
+    const config = this.configData;
+    const label = damage === 1 ? "-1 Heart" : `-${damage} Hearts`;
+    return this.add.text(0, 0, label, {
+      fontFamily: "Trebuchet MS, Arial",
+      fontSize: "22px",
+      fontStyle: "bold",
+      color: "#e04952",
+      stroke: "#fff1dc",
+      strokeThickness: 5
+    })
+      .setOrigin(0.5)
+      .setDepth(config.combo.zIndex)
+      .setPosition(config.game.designWidth / 2, config.game.designHeight / 2)
+      .setAlpha(0.001)
+      .setVisible(true);
+  }
+
+  warmupEffectPopups() {
+    if (!this.effectWarmupFramesRemaining) return;
+    this.effectWarmupFramesRemaining -= 1;
+    if (this.effectWarmupFramesRemaining > 0) return;
 
     for (const popup of this.comboPopups.values()) {
+      popup.setVisible(false).setAlpha(0);
+    }
+    for (const popup of this.hitPopups.values()) {
       popup.setVisible(false).setAlpha(0);
     }
   }
@@ -1339,6 +1366,7 @@ export class ReskinLabScene extends Phaser.Scene {
   damagePlayer(now, damage = this.configData.gorilla.damage) {
     this.playSfx("bunnyHit");
     this.state.hearts = Math.max(0, this.state.hearts - damage);
+    this.showHitPopup(damage);
     this.state.invincibleUntil = now + this.configData.player.invincibilityMs;
 
     if (this.state.hearts <= 0) {
@@ -1466,6 +1494,43 @@ export class ReskinLabScene extends Phaser.Scene {
         popup.setVisible(false);
         if (this.activeComboPopup === popup) this.activeComboPopup = null;
         this.comboPopupTween = null;
+      }
+    });
+  }
+
+  showHitPopup(damage) {
+    const config = this.configData;
+    const lead = this.getLeadCharacter();
+    let popup = this.hitPopups?.get(damage);
+    if (!popup) {
+      popup = this.createHitPopup(damage);
+      this.hitPopups.set(damage, popup);
+    }
+
+    if (this.hitPopupTween) {
+      this.hitPopupTween.stop();
+      this.hitPopupTween = null;
+    }
+    if (this.activeHitPopup && this.activeHitPopup !== popup) {
+      this.activeHitPopup.setVisible(false).setAlpha(0);
+    }
+
+    popup
+      .setPosition(lead.x, lead.y - 52)
+      .setAlpha(1)
+      .setVisible(true);
+    this.activeHitPopup = popup;
+
+    this.hitPopupTween = this.tweens.add({
+      targets: popup,
+      y: popup.y - config.combo.popupRise,
+      alpha: 0,
+      duration: config.combo.popupDurationMs,
+      ease: "Sine.easeOut",
+      onComplete: () => {
+        popup.setVisible(false);
+        if (this.activeHitPopup === popup) this.activeHitPopup = null;
+        this.hitPopupTween = null;
       }
     });
   }
