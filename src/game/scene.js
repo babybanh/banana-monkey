@@ -1423,6 +1423,16 @@ export class ReskinLabScene extends Phaser.Scene {
 
   updateComboOnBananaCollect() {
     const config = this.configData.combo;
+    const totalBananasAfterCollect = this.state.bananaCount + 1;
+    const ignoredOpeningBananas = config.ignoredOpeningBananas || 0;
+    if (totalBananasAfterCollect <= ignoredOpeningBananas) {
+      this.state.comboCount = 0;
+      this.state.comboTimerMs = 0;
+      this.state.lastBananaCollectedAt = 0;
+      this.state.lastComboBonus = 0;
+      return 0;
+    }
+
     const now = this.time.now;
     const isInsideWindow = this.state.lastBananaCollectedAt > 0 &&
       now - this.state.lastBananaCollectedAt <= config.windowMs;
@@ -1430,7 +1440,10 @@ export class ReskinLabScene extends Phaser.Scene {
     this.state.comboCount = isInsideWindow ? this.state.comboCount + 1 : 1;
     this.state.comboTimerMs = config.windowMs;
     this.state.lastBananaCollectedAt = now;
-    this.state.lastComboBonus = this.state.comboCount >= config.minCountForBonus ? config.bonusPoints : 0;
+    const bonusEvery = config.bonusEvery || config.minCountForBonus;
+    const isBonusStep = this.state.comboCount >= config.minCountForBonus &&
+      (this.state.comboCount - config.minCountForBonus) % bonusEvery === 0;
+    this.state.lastComboBonus = isBonusStep ? config.bonusPoints : 0;
     return this.state.lastComboBonus;
   }
 
