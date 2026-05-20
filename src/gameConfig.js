@@ -220,7 +220,7 @@ export const gameConfig = {
     musicPath: "/assets/audio/music/banana-monkey-theme.mp3",
     musicVolume: 0.5,
     loopGapMs: 1000,
-    startDelayMs: 500,
+    startDelayMs: 300,
     startOnFirstMovement: true,
     storageKey: "bananaMonkey.musicEnabled",
     sfxEnabled: true,
