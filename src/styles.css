@@ -502,9 +502,9 @@ body.is-loading #ui-root {
   width: 34px;
   height: 34px;
   padding: 0;
-  color: #3a2820;
-  background: #ffe76b;
-  box-shadow: 0 3px 0 #e7b84b;
+  color: #fff8ea;
+  background: linear-gradient(#f88372, #d94f63);
+  box-shadow: 0 3px 0 #9f3748, 0 8px 14px rgba(97, 45, 52, 0.2);
   font-weight: 750;
   line-height: 34px;
   cursor: pointer;
@@ -594,7 +594,7 @@ body.is-loading #ui-root {
 }
 
 .credits-modal .modal-title {
-  color: #cf5f86;
+  color: #b64048;
   max-width: 390px;
   margin: 8px auto 20px;
   font-size: 26px;
@@ -605,7 +605,7 @@ body.is-loading #ui-root {
 .credits-copy {
   margin: 18px auto 0;
   max-width: 400px;
-  color: #7d5266;
+  color: #8d3b34;
   font-size: 16px;
   font-weight: 750;
   line-height: 1.35;
@@ -622,7 +622,7 @@ body.is-loading #ui-root {
 }
 
 .credits-copy a {
-  color: #e39b25;
+  color: #e99322;
   margin-top: 2px;
   font-size: 19px;
   font-weight: 850;
