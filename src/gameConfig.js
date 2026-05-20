@@ -211,6 +211,7 @@ export const gameConfig = {
     windowMs: 3500,
     minCountForBonus: 3,
     bonusPoints: 3,
+    maxPreRenderedCount: 12,
     popupDurationMs: 850,
     popupRise: 38,
     zIndex: 35

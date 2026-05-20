@@ -50,6 +50,7 @@ export class ReskinLabScene extends Phaser.Scene {
     this.applySmoothTextureFilters();
     this.createWorld();
     this.createCharacters();
+    this.createEffects();
     this.connectUi();
     this.resetGameToStart();
     this.updateWorldArt();
@@ -221,6 +222,33 @@ export class ReskinLabScene extends Phaser.Scene {
     this.secondGorilla.setVisible(false);
   }
 
+  createEffects() {
+    const config = this.configData;
+    const minCombo = config.combo.minCountForBonus;
+    const maxCombo = config.combo.maxPreRenderedCount || 12;
+    this.comboPopups = new Map();
+    for (let count = minCombo; count <= maxCombo; count += 1) {
+      const label = count === maxCombo
+        ? `Combo x${count}+! +${config.combo.bonusPoints}`
+        : `Combo x${count}! +${config.combo.bonusPoints}`;
+      const popup = this.add.text(0, 0, label, {
+        fontFamily: "Trebuchet MS, Arial",
+        fontSize: "22px",
+        fontStyle: "bold",
+        color: "#cf4d82",
+        stroke: "#fff1dc",
+        strokeThickness: 5
+      })
+        .setOrigin(0.5)
+        .setDepth(config.combo.zIndex)
+        .setAlpha(0)
+        .setVisible(false);
+      this.comboPopups.set(count, popup);
+    }
+    this.activeComboPopup = null;
+    this.comboPopupTween = null;
+  }
+
   connectUi() {
     this.ui.onStart = (playMode = this.configData.controls.defaultPlayMode) => {
       this.startGame(playMode);
@@ -355,8 +383,7 @@ export class ReskinLabScene extends Phaser.Scene {
       this.state.bananaCount += 1;
       this.playSfx("bananaPickup");
       if (comboBonus > 0) {
-        this.playSfx("comboBonus");
-        this.showComboPopup(`Combo x${this.state.comboCount}! +${comboBonus}`);
+        this.showComboPopup(this.state.comboCount);
       }
       if (this.state.tutorialActive && this.configData.tutorial.completeAfterFirstBanana) {
         this.state.tutorialActive = false;
@@ -1393,25 +1420,39 @@ export class ReskinLabScene extends Phaser.Scene {
     return this.state.lastComboBonus;
   }
 
-  showComboPopup(text) {
+  showComboPopup(comboCount) {
     const config = this.configData;
     const lead = this.getLeadCharacter();
-    const popup = this.add.text(lead.x, lead.y - 42, text, {
-      fontFamily: "Trebuchet MS, Arial",
-      fontSize: "22px",
-      fontStyle: "bold",
-      color: "#cf4d82",
-      stroke: "#fff1dc",
-      strokeThickness: 5
-    }).setOrigin(0.5).setDepth(config.combo.zIndex);
+    const maxCombo = config.combo.maxPreRenderedCount || 12;
+    const popupKey = Math.min(comboCount, maxCombo);
+    const popup = this.comboPopups?.get(popupKey);
+    if (!popup) return;
 
-    this.tweens.add({
+    if (this.comboPopupTween) {
+      this.comboPopupTween.stop();
+      this.comboPopupTween = null;
+    }
+    if (this.activeComboPopup && this.activeComboPopup !== popup) {
+      this.activeComboPopup.setVisible(false).setAlpha(0);
+    }
+
+    popup
+      .setPosition(lead.x, lead.y - 42)
+      .setAlpha(1)
+      .setVisible(true);
+    this.activeComboPopup = popup;
+
+    this.comboPopupTween = this.tweens.add({
       targets: popup,
       y: popup.y - config.combo.popupRise,
       alpha: 0,
       duration: config.combo.popupDurationMs,
       ease: "Sine.easeOut",
-      onComplete: () => popup.destroy()
+      onComplete: () => {
+        popup.setVisible(false);
+        if (this.activeComboPopup === popup) this.activeComboPopup = null;
+        this.comboPopupTween = null;
+      }
     });
   }
 
