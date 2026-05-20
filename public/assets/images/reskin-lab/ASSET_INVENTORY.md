@@ -16,7 +16,7 @@ Original source archive:
 | Alligator second chaser | `characters/chaser-b.png` | `/Users/ba/Downloads/character-alligator.png` | Replaces the second gorilla role. |
 | Sunset beach default | `backgrounds/sunset-stage.png` | `/Users/ba/Downloads/sunset-beach-day.png` | Default full-frame stage. |
 | Sunny beach alternate | `backgrounds/sunny-stage.png` | `/Users/ba/Downloads/sunny-beach-day.png` | Alternate tuning/debug option. |
-| Concept modal | `concept/original-concept.png` | `/Users/ba/Downloads/background-gameconcept.png` | Ellie's hand-drawn concept image. |
+| Concept modal | `concept/original-concept.webp` | `/Users/ba/Downloads/background-gameconcept.png` | Optimized modal image. Original PNG remains archived/source-readable. |
 
 Audio:
 

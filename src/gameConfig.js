@@ -483,14 +483,14 @@ export const gameConfig = {
   },
 
   concept: {
-    imagePath: "/assets/images/reskin-lab/concept/original-concept.png",
-    title: "Banana Monkey Concept",
-    subtitle: "",
+    imagePath: "/assets/images/reskin-lab/concept/original-concept.webp",
+    title: "Original Game Idea",
+    subtitle: "Ellie's Banana Monkey concept",
     buttonLabel: "Tap title to view the concept",
     imageX: 360,
     imageY: 378,
-    imageWidth: 420,
-    imageHeight: 486
+    imageWidth: 430,
+    imageHeight: 498
   },
 
   credits: {

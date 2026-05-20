@@ -41,7 +41,7 @@ The game still uses the Catch Me mechanics internally, but the Banana Monkey ski
 | Alligator second chaser | `g2` | `public/assets/images/reskin-lab/characters/chaser-b.png` |
 | Sunset beach background | full-frame background | `public/assets/images/reskin-lab/backgrounds/sunset-stage.png` |
 | Sunny beach alternate | full-frame background option | `public/assets/images/reskin-lab/backgrounds/sunny-stage.png` |
-| Concept modal image | concept image | `public/assets/images/reskin-lab/concept/original-concept.png` |
+| Concept modal image | concept image | `public/assets/images/reskin-lab/concept/original-concept.webp` |
 | Ellie music | background music | `public/assets/audio/music/banana-monkey-theme.mp3` |
 
 Original full-size source files are archived in `asset-sources/banana-monkey/`. Only optimized game-ready copies should live under `public/assets/images/reskin-lab/`.
