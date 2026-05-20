@@ -502,9 +502,9 @@ body.is-loading #ui-root {
   width: 34px;
   height: 34px;
   padding: 0;
-  color: #fff8ea;
-  background: linear-gradient(#f88372, #d94f63);
-  box-shadow: 0 3px 0 #9f3748, 0 8px 14px rgba(97, 45, 52, 0.2);
+  color: #3a2820;
+  background: #ffe76b;
+  box-shadow: 0 3px 0 #e7b84b;
   font-weight: 750;
   line-height: 34px;
   cursor: pointer;
@@ -577,10 +577,16 @@ body.is-loading #ui-root {
 }
 
 .credits-modal .soft-modal-card {
-  width: min(520px, 100%);
-  max-width: 100%;
-  padding: 30px 34px 30px;
-  border-radius: 28px;
+  width: 500px;
+  max-width: calc(100% - 36px);
+  padding: 30px 34px 28px;
+  border-radius: 28px 30px 26px 32px;
+  color: #493127;
+  background:
+    radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.92), transparent 30%),
+    linear-gradient(rgba(255, 252, 237, 0.98), rgba(255, 238, 224, 0.97));
+  border: 0;
+  box-shadow: 0 28px 54px rgba(103, 65, 75, 0.24), inset 0 0 0 1px rgba(255, 255, 255, 0.78);
 }
 
 .credits-modal .modal-subtitle {
@@ -588,26 +594,26 @@ body.is-loading #ui-root {
 }
 
 .credits-modal .modal-title {
-  color: #b64048;
-  max-width: 420px;
-  margin: 8px auto 26px;
-  font-size: 29px;
+  color: #cf5f86;
+  max-width: 390px;
+  margin: 8px auto 20px;
+  font-size: 26px;
   font-weight: 850;
-  line-height: 1.08;
+  line-height: 1;
 }
 
 .credits-copy {
-  margin: 0 auto;
+  margin: 18px auto 0;
   max-width: 400px;
-  color: #8d3b34;
-  font-size: 18px;
+  color: #7d5266;
+  font-size: 16px;
   font-weight: 750;
-  line-height: 1.28;
+  line-height: 1.35;
   text-align: center;
 }
 
 .credits-copy + .credits-copy {
-  margin-top: 28px;
+  margin-top: 18px;
 }
 
 .credits-copy span,
@@ -616,10 +622,10 @@ body.is-loading #ui-root {
 }
 
 .credits-copy a {
-  color: #e99322;
-  margin-top: 4px;
-  font-size: 23px;
-  font-weight: 900;
+  color: #e39b25;
+  margin-top: 2px;
+  font-size: 19px;
+  font-weight: 850;
   text-decoration: none;
 }
 
@@ -670,28 +676,6 @@ body.is-loading #ui-root {
     margin-bottom: 12px;
   }
 
-  .credits-modal .soft-modal-card {
-    padding: 28px 22px 28px;
-    border-radius: 26px;
-  }
-
-  .credits-modal .modal-title {
-    margin-bottom: 22px;
-    font-size: 24px;
-  }
-
-  .credits-copy {
-    max-width: 320px;
-    font-size: 16px;
-  }
-
-  .credits-copy + .credits-copy {
-    margin-top: 22px;
-  }
-
-  .credits-copy a {
-    font-size: 20px;
-  }
 }
 
 .debug-panel {
