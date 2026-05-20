@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Banana Monkey</title>
+    <link rel="icon" type="image/png" href="/assets/images/reskin-lab/characters/collectible.png" />
+    <link rel="preload" as="image" href="/assets/images/reskin-lab/backgrounds/sunset-stage.png" fetchpriority="high" />
+    <style>
+      :root {
+        background: #f7c88f;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        min-height: 100svh;
+        height: 100dvh;
+        margin: 0;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        background: #f7c88f;
+      }
+
+      body.is-loading #game-shell {
+        visibility: hidden;
+      }
+
+      html.loading-art-ready body.is-loading #game-shell {
+        visibility: visible;
+      }
+
+      #game-shell {
+        position: relative;
+        width: min(100dvw, calc(100dvh * 0.857142857));
+        max-width: 100vw;
+        aspect-ratio: 720 / 840;
+        overflow: hidden;
+        background-color: #f7c88f;
+        background-image: url("/assets/images/reskin-lab/backgrounds/sunset-stage.png");
+        background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+
+      #loading-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 300;
+        overflow: hidden;
+      }
+
+      #loading-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: #f7c88f;
+        background-image: url("/assets/images/reskin-lab/backgrounds/sunset-stage.png");
+        background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        filter: blur(6px) saturate(1.04);
+        transform: scale(1.015);
+      }
+
+      body.is-loading #game-root,
+      body.is-loading #ui-root {
+        visibility: hidden;
+      }
+
+      .loading-panel {
+        position: absolute;
+        left: calc((360 / 720) * 100%);
+        top: calc((610 / 840) * 100%);
+        width: calc((500 / 720) * 100%);
+        z-index: 1;
+        transform: translate(-50%, -50%);
+        padding: 9px 15px;
+        border-radius: 18px;
+        border: 3px solid rgba(255, 189, 74, 0.95);
+        background: rgba(255, 242, 218, 0.88);
+        color: #35241f;
+        text-align: center;
+        font: 600 15px "Avenir Next", "Trebuchet MS", Arial, sans-serif;
+        box-shadow: 0 8px 22px rgba(97, 45, 52, 0.22);
+      }
+    </style>
+    <script>
+      (() => {
+        const image = new Image();
+        const ready = () => document.documentElement.classList.add("loading-art-ready");
+        image.onload = ready;
+        image.onerror = ready;
+        image.src = "/assets/images/reskin-lab/backgrounds/sunset-stage.png";
+      })();
+    </script>
+  </head>
+  <body class="is-loading">
+    <div id="game-shell">
+      <div id="loading-screen">
+        <div class="loading-panel">Loading Banana Monkey...</div>
+      </div>
+      <div id="game-root"></div>
+      <div id="ui-root" aria-live="polite"></div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
