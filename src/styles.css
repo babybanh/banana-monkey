@@ -112,25 +112,6 @@ body.is-loading #ui-root {
   visibility: hidden;
 }
 
-.loading-panel {
-  position: absolute;
-  left: 50%;
-  top: calc((610 / 840) * 100%);
-  width: calc((500 / 720) * 100%);
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  padding: 1.25cqw 2.083cqw;
-  border-radius: 2.5cqw;
-  text-align: center;
-  font-size: 2.083cqw;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--cocoa);
-  background: var(--sunset-cream);
-  border: 0.417cqw solid rgba(255, 189, 74, 0.95);
-  box-shadow: 0 1.111cqw 3.056cqw var(--warm-shadow);
-}
-
 #game-root,
 #ui-root {
   position: absolute;

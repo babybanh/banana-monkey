@@ -1,7 +1,6 @@
 export const gameConfig = {
   copy: {
     title: "Banana Monkey",
-    loadingText: "Loading Banana Monkey...",
     startPrompt: "Use the joystick or arrow keys to move Banana Monkey.",
     gameOverTitle: "Game Over",
     restartLabel: "Restart",
