@@ -81,6 +81,8 @@ export class ReskinLabScene extends Phaser.Scene {
   }
 
   update(time, deltaMs) {
+    this.warmupComboPopups();
+
     if (this.inputController.debugToggleRequested) {
       this.state.debugVisible = !this.state.debugVisible;
       this.inputController.debugToggleRequested = false;
@@ -241,12 +243,24 @@ export class ReskinLabScene extends Phaser.Scene {
       })
         .setOrigin(0.5)
         .setDepth(config.combo.zIndex)
-        .setAlpha(0)
-        .setVisible(false);
+        .setPosition(config.game.designWidth / 2, config.game.designHeight / 2)
+        .setAlpha(0.001)
+        .setVisible(true);
       this.comboPopups.set(count, popup);
     }
     this.activeComboPopup = null;
     this.comboPopupTween = null;
+    this.comboWarmupFramesRemaining = 3;
+  }
+
+  warmupComboPopups() {
+    if (!this.comboWarmupFramesRemaining) return;
+    this.comboWarmupFramesRemaining -= 1;
+    if (this.comboWarmupFramesRemaining > 0) return;
+
+    for (const popup of this.comboPopups.values()) {
+      popup.setVisible(false).setAlpha(0);
+    }
   }
 
   connectUi() {
