@@ -43,6 +43,7 @@ The game still uses the Catch Me mechanics internally, but the Banana Monkey ski
 | Sunny beach alternate | full-frame background option | `public/assets/images/reskin-lab/backgrounds/sunny-stage.png` |
 | Concept modal image | concept image | `public/assets/images/reskin-lab/concept/original-concept.webp` |
 | Ellie music | background music | `public/assets/audio/music/banana-monkey-theme.mp3` |
+| Pickup/bomb SFX | file-based sound effects | `public/assets/audio/sfx/*.wav` |
 
 Original full-size source files are archived in `asset-sources/banana-monkey/`. Only optimized game-ready copies should live under `public/assets/images/reskin-lab/`.
 

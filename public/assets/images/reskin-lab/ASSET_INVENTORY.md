@@ -23,5 +23,7 @@ Audio:
 | Game role | Optimized file | Source file | Notes |
 | --- | --- | --- | --- |
 | Background music | `public/assets/audio/music/banana-monkey-theme.mp3` | `/Users/ba/Downloads/(8bit) Ellie - Banana Monkey.mp3` | Ellie's 8-bit Banana Monkey theme. |
+| Pickup SFX | `public/assets/audio/sfx/banana-*.wav` | Catch Me If You Can SFX architecture | File-based SFX for mobile unlock reliability. |
+| Bomb SFX | `public/assets/audio/sfx/bomb-*.wav` | Catch Me If You Can SFX architecture | File-based SFX for mobile unlock reliability. |
 
 Do not use Attack of Ziziphus assets or context in this project.

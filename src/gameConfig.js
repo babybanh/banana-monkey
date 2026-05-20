@@ -227,7 +227,19 @@ export const gameConfig = {
     sfxVolume: 0.45,
     sfxStorageKey: "bananaMonkey.sfxEnabled",
     bananaSfxPreset: "softChime",
-    bombSfxPreset: "softBoom"
+    bombSfxPreset: "softBoom",
+    sfxFiles: {
+      bananaPickup: {
+        softChime: "/assets/audio/sfx/banana-soft-chime.wav",
+        bubblePop: "/assets/audio/sfx/banana-bubble-pop.wav",
+        tinyBell: "/assets/audio/sfx/banana-tiny-bell.wav"
+      },
+      bombExplosion: {
+        softBoom: "/assets/audio/sfx/bomb-soft-boom.wav",
+        cartoonPop: "/assets/audio/sfx/bomb-cartoon-pop.wav",
+        lowThump: "/assets/audio/sfx/bomb-low-thump.wav"
+      }
+    }
   },
 
   art: {
@@ -281,58 +293,6 @@ export const gameConfig = {
         scale: 1.5,
         offsetX: 0,
         offsetY: 0
-      }
-    }
-  },
-
-  sfx: {
-    bananaPickup: {
-      presets: {
-        softChime: {
-          label: "Soft chime",
-          notes: [
-            { frequency: 740, durationMs: 70, type: "sine", volume: 0.34 },
-            { frequency: 980, delayMs: 60, durationMs: 90, type: "triangle", volume: 0.28 }
-          ]
-        },
-        bubblePop: {
-          label: "Bubble pop",
-          notes: [
-            { frequency: 420, endFrequency: 760, durationMs: 95, type: "sine", volume: 0.34 }
-          ]
-        },
-        tinyBell: {
-          label: "Tiny bell",
-          notes: [
-            { frequency: 1180, durationMs: 120, type: "sine", volume: 0.24 },
-            { frequency: 1560, delayMs: 20, durationMs: 90, type: "sine", volume: 0.12 }
-          ]
-        }
-      }
-    },
-    bombExplosion: {
-      presets: {
-        softBoom: {
-          label: "Soft boom",
-          notes: [
-            { frequency: 120, endFrequency: 58, durationMs: 240, type: "sine", volume: 0.55 }
-          ],
-          noise: { durationMs: 150, volume: 0.16 }
-        },
-        cartoonPop: {
-          label: "Cartoon pop",
-          notes: [
-            { frequency: 240, endFrequency: 120, durationMs: 130, type: "triangle", volume: 0.42 },
-            { frequency: 520, delayMs: 40, durationMs: 70, type: "sine", volume: 0.18 }
-          ]
-        },
-        lowThump: {
-          label: "Low thump",
-          notes: [
-            { frequency: 82, endFrequency: 44, durationMs: 300, type: "sine", volume: 0.5 }
-          ],
-          noise: { durationMs: 90, volume: 0.08 }
-        }
       }
     }
   },
