@@ -489,8 +489,8 @@ export const gameConfig = {
     buttonLabel: "Tap title to view the concept",
     imageX: 360,
     imageY: 378,
-    imageWidth: 430,
-    imageHeight: 498
+    imageWidth: 340,
+    imageHeight: 392
   },
 
   credits: {

@@ -536,11 +536,26 @@ body.is-loading #ui-root {
   width: min(var(--concept-image-width, 430px), 100%);
   height: auto;
   max-width: 100%;
-  max-height: min(var(--concept-image-max-height, 498px), 56vh);
+  max-height: min(var(--concept-image-max-height, 392px), 52vh);
   margin: 0 auto;
   object-fit: contain;
   border-radius: 18px;
   box-shadow: 0 8px 22px var(--warm-shadow);
+}
+
+.concept-modal .soft-modal-card {
+  width: min(430px, 100%);
+}
+
+.concept-modal .modal-title {
+  max-width: 320px;
+  margin-bottom: 12px;
+  padding: 0 34px;
+  font-size: 25px;
+}
+
+.concept-modal .modal-subtitle {
+  margin: 0 20px 16px;
 }
 
 .modal-copy {
@@ -562,9 +577,10 @@ body.is-loading #ui-root {
 }
 
 .credits-modal .soft-modal-card {
-  width: 500px;
-  max-width: calc(100% - 36px);
-  padding: 30px 34px 28px;
+  width: min(520px, 100%);
+  max-width: 100%;
+  padding: 30px 34px 30px;
+  border-radius: 28px;
 }
 
 .credits-modal .modal-subtitle {
@@ -573,18 +589,25 @@ body.is-loading #ui-root {
 
 .credits-modal .modal-title {
   color: #b64048;
-  font-size: 26px;
+  max-width: 420px;
+  margin: 8px auto 26px;
+  font-size: 29px;
   font-weight: 850;
+  line-height: 1.08;
 }
 
 .credits-copy {
-  margin: 18px auto 0;
+  margin: 0 auto;
   max-width: 400px;
   color: #8d3b34;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 750;
-  line-height: 1.35;
+  line-height: 1.28;
   text-align: center;
+}
+
+.credits-copy + .credits-copy {
+  margin-top: 28px;
 }
 
 .credits-copy span,
@@ -593,10 +616,10 @@ body.is-loading #ui-root {
 }
 
 .credits-copy a {
-  color: #c9434f;
-  margin-top: 2px;
-  font-size: 19px;
-  font-weight: 850;
+  color: #e99322;
+  margin-top: 4px;
+  font-size: 23px;
+  font-weight: 900;
   text-decoration: none;
 }
 
@@ -632,7 +655,42 @@ body.is-loading #ui-root {
   }
 
   .concept-image {
-    max-height: 54vh;
+    max-height: 50vh;
+  }
+
+  .concept-modal .soft-modal-card {
+    padding: 18px 16px 20px;
+  }
+
+  .concept-modal .modal-title {
+    font-size: 22px;
+  }
+
+  .concept-modal .modal-subtitle {
+    margin-bottom: 12px;
+  }
+
+  .credits-modal .soft-modal-card {
+    padding: 28px 22px 28px;
+    border-radius: 26px;
+  }
+
+  .credits-modal .modal-title {
+    margin-bottom: 22px;
+    font-size: 24px;
+  }
+
+  .credits-copy {
+    max-width: 320px;
+    font-size: 16px;
+  }
+
+  .credits-copy + .credits-copy {
+    margin-top: 22px;
+  }
+
+  .credits-copy a {
+    font-size: 20px;
   }
 }
 
