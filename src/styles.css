@@ -676,6 +676,35 @@ body.is-loading #ui-root {
     margin-bottom: 12px;
   }
 
+  .credits-modal .soft-modal-card {
+    width: 500px;
+    max-width: calc(100% - 36px);
+    padding: 30px 34px 28px;
+  }
+
+  .credits-modal .modal-title {
+    max-width: 390px;
+    margin: 8px auto 20px;
+    padding: 0;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .credits-copy {
+    margin: 18px auto 0;
+    max-width: 400px;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .credits-copy + .credits-copy {
+    margin-top: 18px;
+  }
+
+  .credits-copy a {
+    margin-top: 2px;
+    font-size: 19px;
+  }
 }
 
 .debug-panel {
