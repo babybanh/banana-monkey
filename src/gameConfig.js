@@ -209,9 +209,7 @@ export const gameConfig = {
 
   combo: {
     windowMs: 3500,
-    ignoredOpeningBananas: 1,
     minCountForBonus: 3,
-    bonusEvery: 3,
     bonusPoints: 3,
     maxPreRenderedCount: 12,
     popupDurationMs: 850,
