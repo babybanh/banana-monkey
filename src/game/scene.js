@@ -235,8 +235,8 @@ export class ReskinLabScene extends Phaser.Scene {
         fontFamily: "Trebuchet MS, Arial",
         fontSize: "22px",
         fontStyle: "bold",
-        color: "#cf4d82",
-        stroke: "#fff1dc",
+        color: "#d74775",
+        stroke: "#ffffff",
         strokeThickness: 5
       })
         .setOrigin(0.5)
