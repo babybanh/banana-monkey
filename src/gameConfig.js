@@ -459,12 +459,17 @@ export const gameConfig = {
 
   credits: {
     studentName: "Ellie",
+    gameTitle: "Banana Monkey",
     contestTitle: "PIK Composition Contest 2026",
+    contestName: "Piano Inspires Kids Composition Contest",
     contestUrl: "https://youtube.com/playlist?list=PLhhleIn9mEjhNAztK55u86m13lu6xpqoM&si=9kGz8asDtaMO3Wy8",
+    contestPlaylistUrl: "https://youtube.com/playlist?list=PLhhleIn9mEjhNAztK55u86m13lu6xpqoM&si=9kGz8asDtaMO3Wy8",
+    contestMagazineUrl: "https://kids.pianoinspires.com/magazine/",
     linkLabel: "Ellie's theme",
     musicUrl: "https://www.youtube.com/watch?v=5RmrYkf2INU",
     designerName: "Le Binh Anh Nguyen",
     designerEmail: "binhanhpiano96@gmail.com",
+    developerUrl: "https://www.coastal.edu/academics/facultyprofiles/humanities/music/lebinhanhnguyen/",
     line1: "Banana Monkey artwork and music by Ellie",
     line2: "Playable browser-game adaptation by Beita and Codex"
   },
