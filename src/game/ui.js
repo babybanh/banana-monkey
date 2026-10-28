@@ -1,3 +1,5 @@
+import { createBufferedSfx } from "./bufferedSfx.js";
+
 export function createGameUi(config, root, state, input) {
   const defaultConfig = structuredClone(config);
   applySavedTuning(config);
@@ -10,6 +12,7 @@ export function createGameUi(config, root, state, input) {
   root.append(layer);
 
   const elements = {};
+  let currentBackdropPath = null;
   const audio = createAudioController(config);
   state.soundMuted = !audio.musicEnabled;
   const uiApi = {
@@ -170,11 +173,11 @@ export function createGameUi(config, root, state, input) {
   }
 
   function update(debugData) {
-    updatePageBackdrop(config);
-    elements.score.textContent = `${config.copy.scoreLabel}: ${state.score}`;
-    elements.bananaCount.textContent = `${config.copy.roleLabels.collectiblePlural}: ${state.bananaCount}`;
-    elements.hearts.textContent = "♥".repeat(state.hearts);
-    elements.sound.textContent = state.soundMuted ? config.copy.musicOffLabel : config.copy.musicOnLabel;
+    currentBackdropPath = updatePageBackdrop(config, currentBackdropPath);
+    setTextIfChanged(elements.score, `${config.copy.scoreLabel}: ${state.score}`);
+    setTextIfChanged(elements.bananaCount, `${config.copy.roleLabels.collectiblePlural}: ${state.bananaCount}`);
+    setTextIfChanged(elements.hearts, "♥".repeat(state.hearts));
+    setTextIfChanged(elements.sound, state.soundMuted ? config.copy.musicOffLabel : config.copy.musicOnLabel);
     elements.tutorialPrompt.style.display = state.tutorialActive ? "block" : "none";
     elements.debug.style.display = state.debugVisible ? "block" : "none";
     elements.tuning.style.display = state.tuningVisible ? "block" : "none";
@@ -183,7 +186,7 @@ export function createGameUi(config, root, state, input) {
     updateStartSpotlight(elements, state, config);
 
     updateJoystickView(elements, input.joystick, config, state);
-    updateTuningValues(elements, config);
+    if (state.tuningVisible) updateTuningValues(elements, config);
 
     if (state.debugVisible) {
       elements.debugText.textContent = formatDebugText(debugData, state, input, config);
@@ -909,12 +912,13 @@ function formatDebugText(debugData, state, input, config) {
   ].join("\n");
 }
 
-function createAudioController(config) {
+export function createAudioController(config) {
   const savedMusicPreference = localStorage.getItem(config.audio.storageKey);
   const savedSfxPreference = localStorage.getItem(config.audio.sfxStorageKey);
   let musicEnabled = savedMusicPreference === null ? true : savedMusicPreference === "true";
   let sfxEnabled = savedSfxPreference === null ? config.audio.sfxEnabled : savedSfxPreference === "true";
   let started = false;
+  let backgrounded = document.hidden;
   let interactionUnlocked = false;
   let audioPrimed = false;
   let sfxPrimed = false;
@@ -925,31 +929,48 @@ function createAudioController(config) {
   const sfxPlayers = new Map();
   const audio = new Audio(config.audio.musicPath);
   audio.volume = config.audio.musicVolume;
-  audio.preload = "auto";
+  audio.preload = "none";
   audio.playsInline = true;
-  audio.load();
+  const bufferedSfx = createBufferedSfx([getSfxPath("bananaPickup"), getSfxPath("bombExplosion"), getSfxPath("bunnyHit")].filter(Boolean));
   preloadSfxFiles();
 
   audio.addEventListener("ended", () => {
     if (!musicEnabled || !started) return;
     window.clearTimeout(loopTimer);
     loopTimer = window.setTimeout(() => {
-      if (musicEnabled && started) play();
+      if (!backgrounded && !document.hidden && musicEnabled && started) play();
     }, config.audio.loopGapMs);
   });
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) return;
+  function pauseForBackground() {
+    backgrounded = true;
+    started = false;
+    audioPrimed = false;
+    window.clearTimeout(loopTimer);
     window.clearTimeout(startTimer);
-    if (!audio.paused) {
-      window.clearTimeout(loopTimer);
-      audio.pause();
-      started = false;
-      audioPrimed = false;
-    }
+    audio.pause();
+    queuedSfx.length = 0;
+    bufferedSfx?.stop();
+    for (const player of sfxPlayers.values()) player.pause();
+  }
+
+  function resumeFromBackground() {
+    if (document.hidden) return;
+    // Preserve the series policy: resume only on a fresh movement gesture.
+    backgrounded = false;
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) pauseForBackground();
+    else resumeFromBackground();
   });
+  window.addEventListener("pagehide", pauseForBackground);
+  window.addEventListener("pageshow", resumeFromBackground);
+  window.addEventListener("blur", pauseForBackground);
+  window.addEventListener("focus", resumeFromBackground);
 
   function play() {
+    if (backgrounded || document.hidden || !musicEnabled) return;
     audio.volume = config.audio.musicVolume;
     audio.muted = false;
     audio.play().catch(() => {
@@ -958,13 +979,15 @@ function createAudioController(config) {
   }
 
   function prepareFromGesture() {
+    if (backgrounded || document.hidden) return;
     interactionUnlocked = true;
-    primeSfxPath();
+    primeSfxPath(true);
     if (audioPrimed || started || !musicEnabled || !config.audio.startOnFirstMovement) return;
     startMutedMusic();
   }
 
   function startFromMovement() {
+    if (backgrounded || document.hidden) return;
     interactionUnlocked = true;
     primeSfxPath();
     if (!musicEnabled || started || !config.audio.startOnFirstMovement) return;
@@ -995,6 +1018,7 @@ function createAudioController(config) {
   }
 
   function revealMusicAfterDelay() {
+    if (backgrounded || document.hidden) return;
     if (!musicEnabled || !started) return;
     audio.muted = false;
     audio.volume = config.audio.musicVolume;
@@ -1030,7 +1054,7 @@ function createAudioController(config) {
   }
 
   function playSfx(name) {
-    if (!sfxEnabled || !interactionUnlocked) return;
+    if (backgrounded || document.hidden || !sfxEnabled || !interactionUnlocked) return;
     if (!isSfxReady()) {
       queuedSfx.push(name);
       primeSfxPath();
@@ -1041,11 +1065,17 @@ function createAudioController(config) {
 
   function previewSfx(name) {
     interactionUnlocked = true;
-    primeSfxPath();
+    primeSfxPath(true);
     playFileSfx(name);
   }
 
-  function primeSfxPath() {
+  function primeSfxPath(fromGesture = false) {
+    if (!sfxEnabled) return;
+    if (bufferedSfx?.unlock(fromGesture)) {
+      sfxPrimed = true;
+      flushQueuedSfx();
+      return;
+    }
     if (sfxPrimed) {
       flushQueuedSfx();
       return;
@@ -1075,11 +1105,8 @@ function createAudioController(config) {
   }
 
   function preloadSfxFiles() {
-    for (const group of Object.values(config.audio.sfxFiles || {})) {
-      for (const path of Object.values(group || {})) {
-        getSfxPlayer(path);
-      }
-    }
+    // Load the active sounds first; tuning alternatives can load on demand.
+    if (!bufferedSfx) getPrimeableSfxPlayers();
   }
 
   function getPrimeableSfxPlayers() {
@@ -1107,6 +1134,12 @@ function createAudioController(config) {
   function playFileSfx(name) {
     const path = getSfxPath(name);
     if (!path) return;
+    if (bufferedSfx?.play(path, config.audio.sfxVolume, () => playHtmlSfx(path, name),
+      () => sfxEnabled && interactionUnlocked && !backgrounded && !document.hidden)) return;
+    playHtmlSfx(path, name);
+  }
+
+  function playHtmlSfx(path, name) {
     const player = getSfxPlayer(path);
     player.pause();
     player.currentTime = 0;
@@ -1180,14 +1213,16 @@ function updateTuningValues(elements, config) {
   }
 }
 
-function updatePageBackdrop(config) {
+function updatePageBackdrop(config, currentPath) {
   const selected = config.art.fullFrameBackgrounds.find((background) => (
     String(background.id) === String(config.art.selectedFullFrameBackground)
   ));
   const path = config.art.backgroundMode === "fullFrame" && selected ? selected.path : "";
+  if (path === currentPath) return currentPath;
   document.body.style.setProperty("--page-backdrop-image", path ? `url("${path}")` : "none");
   document.body.style.setProperty("--game-frame-image", path ? `url("${path}")` : "none");
   document.body.classList.toggle("has-game-backdrop", Boolean(path));
+  return path;
 }
 
 function applySavedTuning(config) {
@@ -1301,4 +1336,8 @@ function setCircle(element, centerX, centerY, radius) {
 
 function px(value) {
   return `${value}px`;
+}
+
+function setTextIfChanged(element, text) {
+  if (element.textContent !== text) element.textContent = text;
 }
