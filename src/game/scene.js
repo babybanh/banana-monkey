@@ -22,16 +22,6 @@ export class ReskinLabScene extends Phaser.Scene {
     if (selectedPlayfield) this.load.image(`playfield-${selectedPlayfield.id}`, selectedPlayfield.path);
 
     if (config.art.consoleFramePath) this.load.image("console-frame", config.art.consoleFramePath);
-    for (const background of config.art.fullFrameBackgrounds) {
-      if (!selectedFullFrame || String(background.id) !== String(selectedFullFrame.id)) {
-        this.load.image(`full-frame-${background.id}`, background.path);
-      }
-    }
-    for (const background of config.art.playfieldBackgrounds) {
-      if (!selectedPlayfield || String(background.id) !== String(selectedPlayfield.id)) {
-        this.load.image(`playfield-${background.id}`, background.path);
-      }
-    }
     for (const [name, art] of Object.entries(config.art.characters)) {
       if (name !== "bunbun" && name !== "banana") {
         this.load.image(`character-${name}`, art.path);
@@ -56,7 +46,7 @@ export class ReskinLabScene extends Phaser.Scene {
     this.updateWorldArt();
     this.syncSprites();
     this.ui.update({ fps: 0 });
-    this.finishLoadingWhenIntroReady();
+    void this.finishLoadingWhenIntroReady().then(() => this.loadOptionalBackgrounds());
   }
 
   async finishLoadingWhenIntroReady() {
@@ -65,6 +55,19 @@ export class ReskinLabScene extends Phaser.Scene {
     await nextPaint();
     document.body.classList.remove("is-loading");
     document.querySelector("#loading-screen")?.remove();
+  }
+
+  loadOptionalBackgrounds() {
+    const config = this.configData;
+    for (const background of config.art.fullFrameBackgrounds) {
+      const key = `full-frame-${background.id}`;
+      if (!this.textures.exists(key)) this.load.image(key, background.path);
+    }
+    for (const background of config.art.playfieldBackgrounds) {
+      const key = `playfield-${background.id}`;
+      if (!this.textures.exists(key)) this.load.image(key, background.path);
+    }
+    this.load.start();
   }
 
   applySmoothTextureFilters() {
@@ -81,6 +84,7 @@ export class ReskinLabScene extends Phaser.Scene {
   }
 
   update(time, deltaMs) {
+    if (document.hidden) return;
     this.warmupEffectPopups();
 
     if (this.inputController.debugToggleRequested) {
@@ -584,7 +588,7 @@ export class ReskinLabScene extends Phaser.Scene {
       this.fullFrameBackground.setTexture(fullFrameTextureKey);
       this.currentFullFrameBackground = selectedFullFrameId;
     }
-    this.fullFrameBackground.setVisible(Boolean(backgroundMode === "fullFrame" && hasFullFrameTexture));
+    this.fullFrameBackground.setVisible(backgroundMode === "fullFrame");
     this.playAreaFallback.setVisible(Boolean(playfieldLayerVisible && !hasPlayfieldTexture));
 
     if (hasPlayfieldTexture && this.currentPlayfieldBackground !== selectedId) {
